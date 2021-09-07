@@ -109,29 +109,35 @@ public class CountDownTimer {
     }
 
     public void dec() {
+
         if(seconds > 0) {
             seconds--;
         } else {
-            minutes--;
-            seconds = 59;
+            if(minutes > 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                if(hours > 0) {
+                    hours--;
+                    minutes = 59;
+                    seconds = 59;
+                } else {
+                    //Can't decrease, timer is 0:0:0, maybe add something for this case later
+                }
+            }
         }
+
     }
 
-//    Why did I do this method instead of doing it the epic gaming way???
-//    public  void sub(int seconds) {
-//        if (seconds <= this.seconds) {
-//            this.seconds -= seconds;
-//        } else {
-//            int numOfHours = seconds/3600;
-//            this.hours -= numOfHours;
-//            seconds -= numOfHours*3600;
-//            this.minutes -= seconds/60;
-//            this.seconds -= seconds%60;
-//        }
-//    }
-
+    /**
+     * Subtracts an amount of seconds from the current time on this object
+     * @param seconds Number of seconds to subtract from the total time
+     */
     public void sub(int seconds) {
-        //I don't know if this is dumb or smart but I like it
+        /* This is obviously bad code, it's stupid and doesn't scale well
+        However I think it will be plenty good enough for a simple program like this,
+        especially since it will usually be called with smaller 'seconds' values
+        */
         for(int i=0; i<seconds; i++) {
             dec();
         }
