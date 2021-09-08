@@ -64,12 +64,22 @@ public class CountDownTimer {
 
 
     public boolean equals(Object other) {
+        //TODO add checks for null and instanceOf CountdownTimer on both equals
+        //It is also only equal if mins and hours and seconds are the same
+        if (other == null) {
+             throw new IllegalArgumentException();
+        }
+
+        ;
         CountDownTimer check = (CountDownTimer)other;
-        return check.toString().equals(toString());
+        return (check.timeInSeconds() == timeInSeconds());
     }
 
     public static boolean equals(CountDownTimer t1, CountDownTimer t2) {
-        return t1.toString().equals(t2.toString());
+        if(t1 == null || t2 == null) {
+            throw new IllegalArgumentException();
+        }
+        return (t1.timeInSeconds()== t2.timeInSeconds());
     }
 
     public String toString() {
@@ -189,7 +199,7 @@ public class CountDownTimer {
         this.seconds = 0;
     }
 
-    
+
     public int timeInSeconds() {
         return (hours*3600) + (minutes*60) + (seconds);
     }
