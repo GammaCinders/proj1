@@ -51,13 +51,14 @@ public class CountDownTimer {
         if(other == null) {
             throw new IllegalArgumentException();
         }
-        this.hours = other.hours;
-        this.minutes = other.minutes;
-        this.seconds = other.seconds;
+        this.hours = other.getHours();
+        this.minutes = other.getMinutes();
+        this.seconds = other.getSeconds();
     }
 
     /*
     got a lot of work for this, justt need a lot of checks here
+    TODO this is the only thing I really need to work on yet
      */
     public CountDownTimer(String startTime) {
        //This code is kinda shit and not very flexible but it's a start for now
@@ -85,22 +86,24 @@ public class CountDownTimer {
 
 
     public boolean equals(Object other) {
-        //TODO add checks for null and instanceOf CountdownTimer on both equals
-        //It is also only equal if mins and hours and seconds are the same
-        if (other == null) {
-             throw new IllegalArgumentException();
+        if(other == null) {
+            throw new IllegalArgumentException();
         }
 
-        ;
-        CountDownTimer check = (CountDownTimer)other;
-        return (check.timeInSeconds() == timeInSeconds());
+        if(other instanceof CountDownTimer) {
+            CountDownTimer check = (CountDownTimer)other;
+            return (check.toString().equals(toString()));
+        } else {
+            throw new IllegalArgumentException();
+        }
+
     }
 
     public static boolean equals(CountDownTimer t1, CountDownTimer t2) {
         if(t1 == null || t2 == null) {
             throw new IllegalArgumentException();
         }
-        return (t1.timeInSeconds()== t2.timeInSeconds());
+        return (t1.toString().equals(t2.toString()));
     }
 
     public String toString() {
@@ -117,30 +120,37 @@ public class CountDownTimer {
 
     //1 if this is greater, 0 if same, -1 if this is smaller
     public int compareTo(CountDownTimer other) {
-        if(timeInSeconds() > other.timeInSeconds()) {
-            return 1;
-        } else if (other.timeInSeconds() > timeInSeconds()) {
-            return -1;
+        if(other == null) {
+            throw new IllegalArgumentException();
         } else {
-            return 0;
+            if(timeInSeconds() > other.timeInSeconds()) {
+                return 1;
+            } else if (other.timeInSeconds() > timeInSeconds()) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
-
 
     }
 
     //1 if t1 is greater, 0 if same, -1 if t1 is smaller
     public static int compareTo(CountDownTimer t1, CountDownTimer t2) {
-        if(t1.timeInSeconds() > t2.timeInSeconds()) {
-            return 1;
-        } else if (t2.timeInSeconds() > t2.timeInSeconds()) {
-            return -1;
+        if(t1 == null || t2 == null) {
+            throw new IllegalArgumentException();
         } else {
-            return 0;
+            if(t1.timeInSeconds() > t2.timeInSeconds()) {
+                return 1;
+            } else if (t2.timeInSeconds() > t2.timeInSeconds()) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
+
     }
 
     public void dec() {
-
         if(seconds > 0) {
             seconds--;
         } else {
@@ -153,6 +163,7 @@ public class CountDownTimer {
                     minutes = 59;
                     seconds = 59;
                 } else {
+                    //TODO maybe add some Exception here
                     //Can't decrease, timer is 0:0:0, maybe add something for this case later
                 }
             }
@@ -165,17 +176,21 @@ public class CountDownTimer {
      * @param seconds Number of seconds to subtract from the total time
      */
     public void sub(int seconds) {
-        /* This is obviously bad code, it's stupid and doesn't scale well
-        However I think it will be plenty good enough for a simple program like this,
-        especially since it will usually be called with smaller 'seconds' values
-        */
-        for(int i=0; i<seconds; i++) {
-            dec();
+        if(seconds < 1) {
+            throw new IllegalArgumentException();
+        } else {
+            for(int i=0; i<seconds; i++) {
+                dec();
+            }
         }
     }
 
     public void sub(CountDownTimer other) {
-        this.sub(other.timeInSeconds());
+        if(other == null) {
+            throw new IllegalArgumentException();
+        } else {
+            this.sub(other.timeInSeconds());
+        }
     }
 
     public void inc() {
@@ -198,30 +213,32 @@ public class CountDownTimer {
      * @param seconds Number of seconds to add to the total time
      */
     public void add(int seconds) {
-        /* This is also obviously bad code,
-            but again, it should work fine for a simple
-            program like this
-        */
-        for(int i=0; i<seconds; i++) {
-            inc();
+        if(seconds < 0) {
+            throw new IllegalArgumentException();
+        } else {
+            for(int i=0; i<seconds; i++) {
+                inc();
+            }
         }
     }
 
     public void add(CountDownTimer other) {
-        this.add(other.timeInSeconds());
+        if(other == null) {
+            throw new IllegalArgumentException();
+        } else {
+            this.add(other.timeInSeconds());
+        }
     }
 
     /**
      * Just sets time to 00:00:00
      */
     private void setTimeZero(){
-        this.hours = 0;
-        this.minutes = 0;
-        this.seconds = 0;
+        setHours(0);
+        setMinutes(0);
+        setSeconds(0);
     }
 
-
-    //TODO maybe just remove this
     public int timeInSeconds() {
         return (hours*3600) + (minutes*60) + (seconds);
     }
@@ -249,4 +266,6 @@ public class CountDownTimer {
     public void setSeconds(int seconds) {
         this.seconds = seconds;
     }
+
+
 }
