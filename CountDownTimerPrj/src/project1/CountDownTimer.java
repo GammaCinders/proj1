@@ -144,10 +144,45 @@ public class CountDownTimer {
     }
 
     public void sub(CountDownTimer other) {
-
+        this.sub(other.timeInSeconds());
     }
 
+    public void inc() {
+        if(seconds < 59) {
+            seconds++;
+        } else {
+            if(minutes < 59) {
+                minutes++;
+                seconds = 0;
+            } else {
+                hours++;
+                minutes = 0;
+                seconds = 0;
+            }
+        }
+    }
 
+    /**
+     * Adds an amount of seconds to the current time on this object
+     * @param seconds Number of seconds to add to the total time
+     */
+    public void add(int seconds) {
+        /* This is also obviously bad code,
+            but again, it should work fine for a simple
+            program like this
+        */
+        for(int i=0; i<seconds; i++) {
+            inc();
+        }
+    }
+
+    public void add(CountDownTimer other) {
+        this.add(other.timeInSeconds());
+    }
+
+    /**
+     * Just sets time to 00:00:00
+     */
     private void setTimeZero(){
         this.hours = 0;
         this.minutes = 0;
