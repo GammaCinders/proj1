@@ -189,6 +189,7 @@ public class CountDownTimer {
         this.seconds = 0;
     }
 
+    
     public int timeInSeconds() {
         return (hours*3600) + (minutes*60) + (seconds);
     }
