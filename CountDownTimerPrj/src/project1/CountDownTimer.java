@@ -15,29 +15,50 @@ public class CountDownTimer {
     }
 
     public CountDownTimer(int hours, int minutes, int seconds) {
+        if(hours < 0 || minutes < 0 || seconds < 0) {
+            throw new IllegalArgumentException();
+        } else if(minutes > 59 || seconds > 59) {
+            throw new IllegalArgumentException();
+        }
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
     }
 
     public CountDownTimer(int minutes, int seconds) {
+        if(minutes < 0 || seconds < 0) {
+            throw new IllegalArgumentException();
+        } else if(minutes > 59 || seconds > 59) {
+            throw new IllegalArgumentException();
+        }
         this.hours = 0;
         this.minutes = minutes;
         this.seconds = seconds;
     }
 
     public CountDownTimer(int seconds) {
+        if(seconds > 59) {
+            throw new IllegalArgumentException();
+        } else if(seconds < 0) {
+            throw new IllegalArgumentException();
+        }
         this.hours = 0;
         this.minutes = 0;
         this.seconds = seconds;
     }
 
     public CountDownTimer(CountDownTimer other) {
+        if(other == null) {
+            throw new IllegalArgumentException();
+        }
         this.hours = other.hours;
         this.minutes = other.minutes;
         this.seconds = other.seconds;
     }
 
+    /*
+    got a lot of work for this, justt need a lot of checks here
+     */
     public CountDownTimer(String startTime) {
        //This code is kinda shit and not very flexible but it's a start for now
         int i = startTime.indexOf(':');
@@ -200,7 +221,32 @@ public class CountDownTimer {
     }
 
 
+    //TODO maybe just remove this
     public int timeInSeconds() {
         return (hours*3600) + (minutes*60) + (seconds);
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
     }
 }

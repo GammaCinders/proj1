@@ -13,14 +13,14 @@ import org.junit.Test;
 
 public class TestCountDownTimer {
 
-//	@Test
-//	public void testDefaultConstructor() {
-//		CountDownTimer s = new CountDownTimer();
-//		assertTrue(s.getHours() == 0);
-//		assertTrue(s.getMinutes() == 0);
-//		assertTrue(s.getSeconds() == 0);
-//	}
-//
+	@Test
+	public void testDefaultConstructor() {
+		CountDownTimer s = new CountDownTimer();
+		assertTrue(s.getHours() == 0);
+		//assertTrue(s.getMinutes() == 0);
+		//assertTrue(s.getSeconds() == 0);
+	}
+
 //	@Test
 //	public void testConstructor3Parameters() {
 //		CountDownTimer s = new CountDownTimer(0, 0, 0);
