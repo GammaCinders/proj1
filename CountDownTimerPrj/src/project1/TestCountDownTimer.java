@@ -13,6 +13,7 @@ import org.junit.Test;
 
 public class TestCountDownTimer {
 
+	//Testing for the correct default constructor initialized values
 	@Test
 	public void testDefaultConstructor() {
 		CountDownTimer s = new CountDownTimer();
@@ -34,7 +35,7 @@ public class TestCountDownTimer {
 		assertTrue(s.getSeconds() == 4);
 	}
 
-	//Testing for Negative Hours
+	//Testing for Correct Exception for Negative Hours
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructor3ParametersNegHour() {
 		new CountDownTimer(-2, 10, 8);
