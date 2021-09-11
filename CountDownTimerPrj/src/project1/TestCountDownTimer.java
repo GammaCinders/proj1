@@ -13,6 +13,8 @@ import org.junit.Test;
 
 public class TestCountDownTimer {
 
+	//			1 Parameter Constructor Test
+
 	//Testing for the correct default constructor initialized values
 	@Test
 	public void testDefaultConstructor() {
@@ -22,73 +24,181 @@ public class TestCountDownTimer {
 		assertTrue(s.getSeconds() == 0);
 	}
 
+
+
+	//			3 Parameter Constructor Tests
+
+	//Testing the 3param constructor for proper initialized values
 	@Test
 	public void testConstructor3Parameters() {
-		CountDownTimer s = new CountDownTimer(0, 0, 0);
-		assertTrue(s.getHours() == 0);
-		assertTrue(s.getMinutes() == 0);
-		assertTrue(s.getSeconds() == 0);
-
-		s = new CountDownTimer(2, 3, 4);
+		CountDownTimer s = new CountDownTimer(2, 3, 4);
 		assertTrue(s.getHours() == 2);
 		assertTrue(s.getMinutes() == 3);
 		assertTrue(s.getSeconds() == 4);
 	}
 
-	//Testing for Correct Exception for Negative Hours
+	//Testing 3param constructor for Correct Exception for Negative Hours
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructor3ParametersNegHour() {
 		new CountDownTimer(-2, 10, 8);
 	}
 
-	//Testing for Negative Minutes
+	//Testing 3param constructor for Negative Minutes
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructor3ParametersNegMinute() {
 		new CountDownTimer(2, -10, 8);
 	}
 
-	//Testing for Negative Seconds
+	//Testing 3param constructor for Negative Seconds
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructor3ParametersNegSecond() {
 		new CountDownTimer(2, 10, -8);
 	}
 
-//	// Testing for exceptions; testing all 3 at the same time
-//	@Test
-//	public void testConstructor3ParametersNegInput() {
-//		try {
-//			new CountDownTimer(-2, 3, 4);
-//		}
-//		catch (IllegalArgumentException e) {
-//			assertTrue(e != null);
-//		}
-//
-//		try {
-//			new CountDownTimer(2, -3, 4);
-//		}
-//		catch (IllegalArgumentException e) {
-//			assertTrue(e != null);
-//		}
-//
-//		try {
-//			new CountDownTimer(2, 3, -4);
-//		}
-//		catch (IllegalArgumentException e) {
-//			assertTrue(e != null);
-//		}
-//	}
-
-	//Testing for Minutes Too Large
+	//Testing 3param constructor for Minutes Too Large
 	@Test (expected = IllegalArgumentException.class)
-	public void testConstructor3LargeMinute() {
+	public void testConstructor3ParametersLargeMinute() {
 		new CountDownTimer(12, 60, 14);
 	}
 
-	//Testing for Seconds Too Big
+	//Testing 3param constructor for Seconds Too Big
 	@Test (expected = IllegalArgumentException.class)
-	public void testConstructor3LargeSecond() {
+	public void testConstructor3ParametersLargeSecond() {
 		new CountDownTimer(12, 59, 60);
 	}
+
+
+
+	//			2 Parameter Constructor Tests
+
+	//Testing the 2param constructor for proper initialized values
+	@Test
+	public void testConstructor2Parameters() {
+		CountDownTimer s = new CountDownTimer(3, 4);
+		assertTrue(s.getHours() == 0);
+		assertTrue(s.getMinutes() == 3);
+		assertTrue(s.getSeconds() == 4);
+	}
+
+	//Testing 2param constructor for Negative Minutes
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor2ParametersNegMinute() {
+		new CountDownTimer(-10, 8);
+	}
+
+	//Testing 2param constructor for Negative Seconds
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor2ParametersNegSecond() {
+		new CountDownTimer(10, -8);
+	}
+
+	//Testing 2param constructor for Minutes Too Large
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor2ParametersLargeMinute() {
+		new CountDownTimer(60, 14);
+	}
+
+	//Testing 2param constructor for Seconds Too Big
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor2ParametersLargeSecond() {
+		new CountDownTimer(59, 60);
+	}
+
+
+
+	//			1 Parameter Constructor Tests
+
+	//Testing the 1param constructor for proper initialized values
+	@Test
+	public void testConstructor1Parameter() {
+		CountDownTimer s = new CountDownTimer(4);
+		assertTrue(s.getHours() == 0);
+		assertTrue(s.getMinutes() == 0);
+		assertTrue(s.getSeconds() == 4);
+	}
+
+	//Testing 2param constructor for Negative Seconds
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor1ParameterNegSecond() {
+		new CountDownTimer(-8);
+	}
+
+	//Testing 2param constructor for Seconds Too Big
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructor1ParameterLargeSecond() {
+		new CountDownTimer(60);
+	}
+
+
+
+	//			Other CountDownTimer Parameter Constructor Tests
+
+	//Testing copy constructor for proper initialized values
+	@Test
+	public void testCopyConstructor() {
+		CountDownTimer c = new CountDownTimer(5, 9, 1);
+		CountDownTimer s = new CountDownTimer(c);
+		assertTrue(s.getHours() == 5);
+		assertTrue(s.getMinutes() == 9);
+		assertTrue(s.getSeconds() == 1);
+	}
+
+	//Testing copy constructor for a null CountDownTimer being passed
+	@Test (expected = IllegalArgumentException.class)
+	public void testCopyConstructorNull() {
+		CountDownTimer n = null;
+		new CountDownTimer(n);
+	}
+
+
+
+	//			String Parameter Constructor Tests, oh boy here we go!
+
+	//Testing String param with an empty string (should init to 0:00:00)
+	@Test
+	public void testConstructorStringParameterEmpty() {
+		CountDownTimer c = new CountDownTimer("");
+		assertTrue(c.getSeconds() == 0);
+		assertTrue(c.getMinutes() == 0);
+		assertTrue(c.getHours() == 0);
+	}
+
+	//Testing String param with a proper string with hours (3 parts)
+	@Test
+	public void testConstructorStringParameter3GoodFormat() {
+		CountDownTimer c = new CountDownTimer("12:30:10");
+		assertTrue(c.getSeconds() == 10);
+		assertTrue(c.getMinutes() == 30);
+		assertTrue(c.getHours() == 12);
+	}
+
+	//Testing String param with a proper string with minutes (2 parts)
+	@Test
+	public void testConstructorStringParameter2GoodFormat() {
+		CountDownTimer c = new CountDownTimer("40:20");
+		assertTrue(c.getSeconds() == 20);
+		assertTrue(c.getMinutes() == 40);
+		assertTrue(c.getHours() == 0);
+	}
+
+	//Testing String param with a proper string with hours (1 part)
+	@Test
+	public void testConstructorStringParameter1GoodFormat() {
+		CountDownTimer c = new CountDownTimer("30");
+		assertTrue(c.getSeconds() == 30);
+		assertTrue(c.getMinutes() == 0);
+		assertTrue(c.getHours() == 0);
+	}
+
+	//Testing String param for a null passed
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructorStringParameterNull() {
+		String s = null;
+		new CountDownTimer(s);
+	}
+
+
+
 
 //	// Testing for an exception; no lines of code after
 //	// "new CountDownTimer("a");" will be run

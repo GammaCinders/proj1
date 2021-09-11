@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fffa84fa-2762-449b-a86f-f0a78ccddb2c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CountDownTimerPrj/src/project1/CountDownTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CountDownTimerPrj/src/project1/CountDownTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CountDownTimerPrj/src/project1/TestCountDownTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/CountDownTimerPrj/src/project1/TestCountDownTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/proj1/project1/CountDownTimer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/proj1/project1/CountDownTimer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/proj1/project1/CountDownTimerGUISwing.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/proj1/project1/CountDownTimerGUISwing.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/proj1/project1/TestCountDownTimer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/proj1/project1/TestCountDownTimer.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,11 +33,11 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.1530343" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
-  <component name="RunManager">
-    <configuration name="CountDownTimerGUISwing" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="project1.CountDownTimerGUISwing" />
+  <component name="RunManager" selected="JUnit.TestCountDownTimer.testConstructorStringParameterEmpty">
+    <configuration name="TestCountDownTimer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="proj1" />
       <extension name="coverage">
         <pattern>
@@ -42,13 +45,84 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="project1" />
+      <option name="MAIN_CLASS_NAME" value="project1.TestCountDownTimer" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestCountDownTimer.testConstructorStringParameter1GoodFormat" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="proj1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="project1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="project1" />
+      <option name="MAIN_CLASS_NAME" value="project1.TestCountDownTimer" />
+      <option name="METHOD_NAME" value="testConstructorStringParameter1GoodFormat" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestCountDownTimer.testConstructorStringParameter2GoodFormat" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="proj1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="project1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="project1" />
+      <option name="MAIN_CLASS_NAME" value="project1.TestCountDownTimer" />
+      <option name="METHOD_NAME" value="testConstructorStringParameter2GoodFormat" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestCountDownTimer.testConstructorStringParameter3GoodFormat" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="proj1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="project1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="project1" />
+      <option name="MAIN_CLASS_NAME" value="project1.TestCountDownTimer" />
+      <option name="METHOD_NAME" value="testConstructorStringParameter3GoodFormat" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestCountDownTimer.testConstructorStringParameterEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="proj1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="project1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="project1" />
+      <option name="MAIN_CLASS_NAME" value="project1.TestCountDownTimer" />
+      <option name="METHOD_NAME" value="testConstructorStringParameterEmpty" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CountDownTimerGUISwing" />
+        <item itemvalue="JUnit.TestCountDownTimer.testConstructorStringParameterEmpty" />
+        <item itemvalue="JUnit.TestCountDownTimer" />
+        <item itemvalue="JUnit.TestCountDownTimer.testConstructorStringParameter1GoodFormat" />
+        <item itemvalue="JUnit.TestCountDownTimer.testConstructorStringParameter2GoodFormat" />
+        <item itemvalue="JUnit.TestCountDownTimer.testConstructorStringParameter3GoodFormat" />
       </list>
     </recent_temporary>
   </component>
@@ -75,8 +149,23 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.AssertionError" package="java.lang" />
+          <option name="timeStamp" value="6" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/proj1$TestCountDownTimer.ic" NAME="TestCountDownTimer Coverage Results" MODIFIED="1631404266212" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>project1.*</FILTER>
+    </SUITE>
   </component>
 </project>
