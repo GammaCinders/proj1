@@ -24,9 +24,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If hours, minutes or seconds are negative; also if minutes or seconds are greater than 59
      */
     public CountDownTimer(int hours, int minutes, int seconds) {
-        if(hours < 0 || minutes < 0 || seconds < 0) {
-            throw new IllegalArgumentException();
-        } else if(minutes > 59 || seconds > 59) {
+        if(hours < 0 || !isValid(minutes) || !isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = hours;
@@ -41,9 +39,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If minutes or seconds is greater than 59 or negative
      */
     public CountDownTimer(int minutes, int seconds) {
-        if(minutes < 0 || seconds < 0) {
-            throw new IllegalArgumentException();
-        } else if(minutes > 59 || seconds > 59) {
+        if(!isValid(minutes) || !isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = 0;
@@ -57,9 +53,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If seconds is negative or greater than 59
      */
     public CountDownTimer(int seconds) {
-        if(seconds > 59) {
-            throw new IllegalArgumentException();
-        } else if(seconds < 0) {
+        if(!isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = 0;
@@ -146,9 +140,12 @@ public class CountDownTimer {
                     this.minutes = Integer.parseInt(split[1]);
                     this.hours = Integer.parseInt(split[0]);
                     break;
-                //Default should never be called since length was already verified, but throw an error anyways to be safe
-                default:
-                    throw new IllegalArgumentException();
+            }
+
+            //TODO not sure if this is okay, idk if I should check before assigning and throw then, or if this is fine
+            //Also here there is no need to check for negatives, since it is the same as a bad character throw since this is a string
+            if(!isValid(this.seconds) || !isValid(this.minutes)) {
+                throw new IllegalArgumentException();
             }
 
         }
@@ -171,7 +168,6 @@ public class CountDownTimer {
         } else {
             throw new IllegalArgumentException();
         }
-
     }
 
     /*********************************************************************************************************************
@@ -364,6 +360,19 @@ public class CountDownTimer {
         return (hours*3600) + (minutes*60) + (seconds);
     }
 
+    /************************************************************
+     * Used to test if some number of minutes or seconds are valid
+     * @param minsOrSecs number of minutes or seconds to check if valid
+     * @return boolean false if param is negative or greater than 59
+     */
+    private boolean isValid(int minsOrSecs) {
+        if(minsOrSecs < 0 || minsOrSecs > 59) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /*************************************************
      * Gets the value of hours on this timer
      * @return int hours that this timer holds
@@ -406,7 +415,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If minutes is negative of greater than 59
      */
     public void setMinutes(int minutes) {
-        if(minutes < 0 || minutes > 59) {
+        if(!isValid(minutes)) {
             throw new IllegalArgumentException();
         }
         this.minutes = minutes;
@@ -418,7 +427,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If seconds are negative or greater than 59
      */
     public void setSeconds(int seconds) {
-        if(seconds < 0 || seconds > 59) {
+        if(!isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.seconds = seconds;
