@@ -468,7 +468,7 @@ public class TestCountDownTimer {
 	public void testCompareToParameter2LessThan() {
 		CountDownTimer c = new CountDownTimer(2, 22, 0);
 		CountDownTimer c1 = new CountDownTimer(2, 21, 0);
-		assertEquals(1, c.compareTo(c1));
+		assertEquals(1, CountDownTimer.compareTo(c, c1));
 	}
 
 	//Testing for passed timer with more time
@@ -476,7 +476,7 @@ public class TestCountDownTimer {
 	public void testCompareToParameter2MoreThan() {
 		CountDownTimer c = new CountDownTimer(2, 22, 0);
 		CountDownTimer c1 = new CountDownTimer(2, 22, 1);
-		assertEquals(-1, c.compareTo(c1));
+		assertEquals(-1, CountDownTimer.compareTo(c, c1));
 	}
 
 	//Testing for passed timer with same amount of time
@@ -484,7 +484,7 @@ public class TestCountDownTimer {
 	public void testCompareParameter2EqualTo() {
 		CountDownTimer c = new CountDownTimer(8, 56, 2);
 		CountDownTimer c1 = new CountDownTimer(8, 56, 2);
-		assertEquals(0, c.compareTo(c1));
+		assertEquals(0, CountDownTimer.compareTo(c, c1));
 	}
 
 
@@ -565,6 +565,21 @@ public class TestCountDownTimer {
 		CountDownTimer s = new CountDownTimer();
 		s.add(-10);
 	}
+
+
+
+
+
+	@Test
+	public void testSaveAndLoadGoodInput() {
+		CountDownTimer c = new CountDownTimer(9, 3, 23);
+		c.save("testTimer.txt");
+		CountDownTimer c2 = new CountDownTimer();
+		c2.load("testTimer.txt");
+		assertEquals("9:03:23", c2.toString());
+	}
+
+
 
 //	@Test
 //	public void testDec1Second() {

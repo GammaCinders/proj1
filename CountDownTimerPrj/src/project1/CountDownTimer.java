@@ -1,6 +1,9 @@
 package project1;
 
 import sun.rmi.transport.proxy.RMISocketInfo;
+import java.util.Scanner;
+import java.io.File;
+import java.io.*;
 
 public class CountDownTimer {
 
@@ -8,6 +11,7 @@ public class CountDownTimer {
     private int minutes;
     private int seconds;
 
+    private static boolean suspended = false;
 
     /************************************
      * Initializes this object to time 0:00:00
@@ -238,7 +242,7 @@ public class CountDownTimer {
         } else {
             if(t1.timeInSeconds() > t2.timeInSeconds()) {
                 return 1;
-            } else if (t2.timeInSeconds() > t2.timeInSeconds()) {
+            } else if (t2.timeInSeconds() > t1.timeInSeconds()) {
                 return -1;
             } else {
                 return 0;
@@ -252,19 +256,21 @@ public class CountDownTimer {
      * @throws IllegalStateException If this timer is already at 0:00:00
      */
     public void dec() {
-        if(this.timeInSeconds() < 1) {
-            throw new IllegalStateException();
-        } else {
-            seconds--;
+        if(!suspended) {
+            if(this.timeInSeconds() < 1) {
+                throw new IllegalStateException();
+            } else {
+                seconds--;
 
-            if(seconds < 0) {
-                minutes--;
-                seconds = 59;
-            }
+                if(seconds < 0) {
+                    minutes--;
+                    seconds = 59;
+                }
 
-            if(minutes < 0) {
-                hours--;
-                minutes = 59;
+                if(minutes < 0) {
+                    hours--;
+                    minutes = 59;
+                }
             }
         }
     }
@@ -275,11 +281,13 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If seconds is negative or 0
      */
     public void sub(int seconds) {
-        if(seconds < 1) {
-            throw new IllegalArgumentException();
-        } else {
-            for(int i=0; i<seconds; i++) {
-                dec();
+        if(!suspended) {
+            if(seconds < 1) {
+                throw new IllegalArgumentException();
+            } else {
+                for(int i=0; i<seconds; i++) {
+                    dec();
+                }
             }
         }
     }
@@ -290,10 +298,12 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If a null Timer or a Timer with more total seconds than this one is passed
      */
     public void sub(CountDownTimer other) {
-        if(other == null || other.timeInSeconds() > this.timeInSeconds()) {
-            throw new IllegalArgumentException();
-        } else {
-            this.sub(other.timeInSeconds());
+        if(!suspended) {
+            if(other == null || other.timeInSeconds() > this.timeInSeconds()) {
+                throw new IllegalArgumentException();
+            } else {
+                this.sub(other.timeInSeconds());
+            }
         }
     }
 
@@ -301,16 +311,18 @@ public class CountDownTimer {
      * Adds one second to the current timer value
      */
     public void inc() {
-        seconds++;
+        if(!suspended) {
+            seconds++;
 
-        if(seconds > 59) {
-            minutes++;
-            seconds = 0;
-        }
+            if(seconds > 59) {
+                minutes++;
+                seconds = 0;
+            }
 
-        if(minutes > 59) {
-            hours++;
-            minutes = 0;
+            if(minutes > 59) {
+                hours++;
+                minutes = 0;
+            }
         }
     }
 
@@ -320,11 +332,13 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If param seconds is negative or 0
      */
     public void add(int seconds) {
-        if(seconds < 1) {
-            throw new IllegalArgumentException();
-        } else {
-            for(int i=0; i<seconds; i++) {
-                inc();
+        if(!suspended) {
+            if(seconds < 1) {
+                throw new IllegalArgumentException();
+            } else {
+                for(int i=0; i<seconds; i++) {
+                    inc();
+                }
             }
         }
     }
@@ -335,20 +349,86 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If a null Timer is passed
      */
     public void add(CountDownTimer other) {
-        if(other == null) {
-            throw new IllegalArgumentException();
-        } else {
-            this.add(other.timeInSeconds());
+        if(!suspended) {
+            if(other == null) {
+                throw new IllegalArgumentException();
+            } else {
+                this.add(other.timeInSeconds());
+            }
         }
+    }
+
+
+    //TODO update all here methods that I added later with javadocs
+    /*************************************************************************************
+     *
+     * @param fileName
+     */
+    public void save(String fileName) {
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO throw something here that makes sense: throw new IllegalArgumentException();
+        }
+
+        out.println(toString());
+        out.close();
+    }
+
+    /*********************************************************************************
+     *
+     * @param fileName
+     * @throws RuntimeException If a file could not be found or loaded properly at fileName
+     */
+    public void load(String fileName) {
+        try {
+            Scanner fileReader = new Scanner(new File(fileName));
+            CountDownTimer temp = new CountDownTimer(fileReader.next());
+            copyOtherTimer(temp);
+        //File could not be read/found
+        } catch(Exception error){
+            //That means a bad string was passed
+            throw new IllegalArgumentException();
+        }
+
+    }
+
+    /************************************************************
+     * Sets this timers time to that of the 'other' timer passed
+     * @param other CountDownTimer with time to write onto this timer
+     * @throws IllegalArgumentException If other is null
+     */
+    public void copyOtherTimer(CountDownTimer other) {
+        if(!suspended) {
+            if(other == null) {
+                throw new IllegalArgumentException();
+            }
+
+            this.seconds = other.getSeconds();
+            this.minutes = other.getMinutes();
+            this.hours = other.getHours();
+        }
+    }
+
+    public static void setSuspend(boolean suspend) {
+        CountDownTimer.suspended = suspend;
+    }
+
+    public static boolean isSuspended() {
+        return CountDownTimer.suspended;
     }
 
     /***************************************************
      * Just sets time to 00:00:00
      */
     private void setTimeZero(){
-        setHours(0);
-        setMinutes(0);
-        setSeconds(0);
+        if(!suspended) {
+            setHours(0);
+            setMinutes(0);
+            setSeconds(0);
+        }
     }
 
     /******************************************************
@@ -403,10 +483,12 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If hours is negative
      */
     public void setHours(int hours) {
-        if(hours < 0) {
-            throw new IllegalArgumentException();
+        if(!suspended) {
+            if(hours < 0) {
+                throw new IllegalArgumentException();
+            }
+            this.hours = hours;
         }
-        this.hours = hours;
     }
 
     /********************************************************************************************
@@ -415,10 +497,12 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If minutes is negative of greater than 59
      */
     public void setMinutes(int minutes) {
-        if(!isValid(minutes)) {
-            throw new IllegalArgumentException();
+        if(!suspended) {
+            if(!isValid(minutes)) {
+                throw new IllegalArgumentException();
+            }
+            this.minutes = minutes;
         }
-        this.minutes = minutes;
     }
 
     /************************************************************************************************
@@ -427,10 +511,12 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If seconds are negative or greater than 59
      */
     public void setSeconds(int seconds) {
-        if(!isValid(seconds)) {
-            throw new IllegalArgumentException();
+        if(!suspended) {
+            if(!isValid(seconds)) {
+                throw new IllegalArgumentException();
+            }
+            this.seconds = seconds;
         }
-        this.seconds = seconds;
     }
 
 
