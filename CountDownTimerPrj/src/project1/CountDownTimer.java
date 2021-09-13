@@ -5,6 +5,9 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.*;
 
+/******************************************************************************************8
+ *
+ */
 public class CountDownTimer {
 
     private int hours;
@@ -127,6 +130,14 @@ public class CountDownTimer {
 
             }
 
+
+            for(int i=0; i<split.length; i++) {
+                int num = Integer.parseInt(split[i]);
+                if(i != 2 && !isValid(num) || num < 0) {
+                    throw new IllegalArgumentException();
+                }
+            }
+
             //Im sure there is a more elegant way to do this without repeating code, but this is fine
             switch(split.length) {
                 case 1:
@@ -145,13 +156,6 @@ public class CountDownTimer {
                     this.hours = Integer.parseInt(split[0]);
                     break;
             }
-
-            //TODO not sure if this is okay, idk if I should check before assigning and throw then, or if this is fine
-            //Also here there is no need to check for negatives, since it is the same as a bad character throw since this is a string
-            if(!isValid(this.seconds) || !isValid(this.minutes)) {
-                throw new IllegalArgumentException();
-            }
-
         }
     }
 
