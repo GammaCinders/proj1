@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.NoSuchFileException;
 import java.util.IllformedLocaleException;
 
 import org.junit.Assert;
@@ -327,7 +328,7 @@ public class TestCountDownTimer {
 	public void testEquals1ParameterEqualObjects() {
 		CountDownTimer t1 = new CountDownTimer(3, 35);
 		CountDownTimer t2 = new CountDownTimer("03:35");
-		assertEquals(t1, t2);
+		assertTrue(t1.equals(t2));
 	}
 
 	//Testing for a passed a non CountDownTimer object
@@ -335,7 +336,7 @@ public class TestCountDownTimer {
 	public void testEqualsParameterNotCountDownTimer() {
 		CountDownTimer t1 = new CountDownTimer(3, 35);
 		String t2 = "This is not a CountDownTimer";
-		assertEquals(t1, t2);
+		assertTrue(t1.equals(t2));
 	}
 
 	//Testing for a passed null object
@@ -343,7 +344,7 @@ public class TestCountDownTimer {
 	public void testEqualsParameterNull() {
 		CountDownTimer t1 = new CountDownTimer(3, 35);
 		CountDownTimer t2 = null;
-		assertEquals(t1, t2);
+		t1.equals(t2);
 	}
 
 
@@ -384,32 +385,32 @@ public class TestCountDownTimer {
 
 
 
-	//	toString Method Tests
+	//			toString Method Tests
 
 	//Testing for correct return string with all 2 digits (less formatting)
 	@Test
 	public void testToString2DigitValues() {
 		CountDownTimer c = new CountDownTimer(49, 34, 26);
-		assertEquals(c.toString(), "49:34:26");
+		assertEquals("49:34:26", c.toString());
 	}
 
 	//Testing for correct return string with 1 digit values (should become 2 in output)
 	@Test
 	public void testToString1DigitValues() {
 		CountDownTimer c = new CountDownTimer(4, 3, 9);
-		assertEquals(c.toString(), "4:03:09");
+		assertEquals("4:03:09", c.toString());
 	}
 
 	//Testing for correct return string with large hours (no error)
 	@Test
 	public void testToStringLargeHours() {
 		CountDownTimer c = new CountDownTimer(920, 45, 29);
-		assertEquals(c.toString(), "920:45:29");
+		assertEquals("920:45:29", c.toString());
 	}
 
 
 
-	//	1 Parameter CompareTo Method Tests
+	//			1 Parameter CompareTo Method Tests
 
 	//Testing for a passed null in compareTo
 	@Test (expected = IllegalArgumentException.class)
@@ -437,7 +438,7 @@ public class TestCountDownTimer {
 
 	//Testing for passed timer with same amount of time
 	@Test
-	public void testCompareParameter1EqualTo() {
+	public void testCompareToParameter1EqualTo() {
 		CountDownTimer c = new CountDownTimer(8, 56, 2);
 		CountDownTimer c1 = new CountDownTimer(8, 56, 2);
 		assertEquals(0, c.compareTo(c1));
@@ -445,7 +446,7 @@ public class TestCountDownTimer {
 
 
 
-	//	2 Parameter CompareTo Method Tests
+	//			2 Parameter CompareTo Method Tests
 
 	//Testing for a passed null in compareTo in 1st param only
 	@Test (expected = IllegalArgumentException.class)
@@ -481,7 +482,7 @@ public class TestCountDownTimer {
 
 	//Testing for passed timer with same amount of time
 	@Test
-	public void testCompareParameter2EqualTo() {
+	public void testCompareToParameter2EqualTo() {
 		CountDownTimer c = new CountDownTimer(8, 56, 2);
 		CountDownTimer c1 = new CountDownTimer(8, 56, 2);
 		assertEquals(0, CountDownTimer.compareTo(c, c1));
@@ -489,89 +490,348 @@ public class TestCountDownTimer {
 
 
 
-	//
+	//			Dec Method Tests
 
-
-
-//	// Testing for an exception; no lines of code after
-//	// "new CountDownTimer("a");" will be run
-//	@Test (expected = IllegalArgumentException.class)
-//	public void testConstructorString1ParameterAlpha() {
-//		new CountDownTimer("a");
-//	}
-//
-//	@Test (expected = IllegalArgumentException.class)
-//	public void testConstructorStringLarge() {
-//		new CountDownTimer("1:23:45:678");
-//	}
-
+	//Testing for simple one second decrease
 	@Test
-	public void testAdd1() {
-		CountDownTimer s = new CountDownTimer();
-
-		s.add(1);
-		assertEquals(s.getHours(), 0);
-		assertEquals(s.getMinutes(), 0);
-		assertEquals(s.getSeconds(), 1);
+	public void testDecSimple() {
+		CountDownTimer c = new CountDownTimer(3, 43, 28);
+		c.dec();
+		assertEquals(27, c.getSeconds());
+		assertEquals("3:43:27", c.toString());
 	}
 
+	//Testing for no error when called with one second on timer
 	@Test
-	public void testAdd30() {
-		CountDownTimer s = new CountDownTimer();
-
-		s.add(30);
-		assertEquals(s.getHours(), 0);
-		assertEquals(s.getMinutes(), 0);
-		assertEquals(s.getSeconds(), 30);
+	public void testDecOneSecondLeft() {
+		CountDownTimer c = new CountDownTimer(1);
+		c.dec();
+		assertEquals(0 , c.getSeconds());
+		assertEquals("0:00:00", c.toString());
 	}
 
+	//Testing for minute rollover on decrease
 	@Test
-	public void testAdd59() {
-		CountDownTimer s = new CountDownTimer();
-
-		s.add(59);
-		assertEquals(s.getHours(), 0);
-		assertEquals(s.getMinutes(), 0);
-		assertEquals(s.getSeconds(), 59);
+	public void testDecMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(10, 23, 0);
+		c.dec();
+		assertEquals("10:22:59", c.toString());
 	}
 
+	//Testing for hour rollover on decrease
 	@Test
-	public void testAdd60() {
-		CountDownTimer s = new CountDownTimer();
-
-		// inc to 1 min
-		s.add(60);
-		assertEquals(s.getHours(), 0);
-		assertEquals(s.getMinutes(), 1);
-		assertEquals(s.getSeconds(), 0);
+	public void testDecHourRollover() {
+		CountDownTimer c = new CountDownTimer(5, 0, 0);
+		c.dec();
+		assertEquals( "4:59:59", c.toString());
 	}
 
-	//Uses add to inc to 1:1:1, adds one hour, one min, and one sec
-	//Great test, ensures all rollover on add() is working
-	@Test
-	public void testAddOneEach() {
-		CountDownTimer s = new CountDownTimer();
-
-		//inc 1 hour, 1 min, 1 sec
-		s.add(3661);
-		assertEquals(s.getHours(), 1);
-		assertEquals(s.getMinutes(), 1);
-		assertEquals(s.getSeconds(), 1);
+	//Testing for an illegal call when the timer is at 0
+	@Test (expected = IllegalStateException.class)
+	public void testDecAlreadyAtZero() {
+		CountDownTimer c = new CountDownTimer();
+		c.dec();
 	}
 
-	//Calls add() with negative arg
+
+
+	//			Sub Seconds Parameter Method Tests
+
+	//Testing for simple one second subtraction
+	@Test
+	public void testSubSecondsOneSecond() {
+		CountDownTimer c = new CountDownTimer(56, 41, 51);
+		c.sub(1);
+		assertEquals(50, c.getSeconds());
+		assertEquals("56:41:50", c.toString());
+	}
+
+	//Testing for simple subtraction with no rollover
+	@Test
+	public void testSubSeconds30Seconds() {
+		CountDownTimer c = new CountDownTimer(56, 41, 50);
+		c.sub(30);
+		assertEquals(20, c.getSeconds());
+		assertEquals("56:41:20", c.toString());
+	}
+
+	//Testing for no error when subtracting time equal to timers time (should be 0 after)
+	@Test
+	public void testSubSecondsTimeEqualsTimerTime() {
+		CountDownTimer c = new CountDownTimer(1, 20, 20);
+		c.sub(c.timeInSeconds());
+		assertEquals(0, c.getSeconds());
+		assertEquals("0:00:00", c.toString());
+	}
+
+	//Testing for minute rollover on subtract
+	@Test
+	public void testSubSecondsMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(1, 20, 10);
+		c.sub(15);
+		assertEquals("1:19:55", c.toString());
+	}
+
+	//Testing for hour rollover on subtract
+	@Test
+	public void testSubSecondsHourRollover() {
+		CountDownTimer c = new CountDownTimer(5, 1, 10);
+		c.sub(75);
+		assertEquals("4:59:55", c.toString());
+	}
+
+	//Testing for an illegal call when param to subtract is greater than time on timer
 	@Test (expected = IllegalArgumentException.class)
-	public void testAddNeg() {
-		CountDownTimer s = new CountDownTimer();
-		s.add(-10);
+	public void testSubSecondsParameterTooLarge() {
+		CountDownTimer c = new CountDownTimer(0, 3, 10);
+		c.sub(191);
+	}
+
+	//Testing for an illegal call when param is negative
+	@Test (expected = IllegalArgumentException.class)
+	public void testSubSecondsNegParam() {
+		CountDownTimer c = new CountDownTimer(0, 3, 10);
+		c.sub(-3);
 	}
 
 
 
+	//			Sub CountDownTimer Parameter Method Tests
 
-
+	//Testing for simple one second subtraction
 	@Test
-	public void testSaveAndLoadGoodInput() {
+	public void testSubTimerOneSecond() {
+		CountDownTimer c = new CountDownTimer(40, 26, 51);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 1);
+		c.sub(c2);
+		assertEquals(50, c.getSeconds());
+		assertEquals("40:26:50", c.toString());
+	}
+
+	//Testing for simple subtraction with no rollover
+	@Test
+	public void testSubTimer35Seconds() {
+		CountDownTimer c = new CountDownTimer(40, 26, 51);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 35);
+		c.sub(c2);
+		assertEquals(16, c.getSeconds());
+		assertEquals("40:26:16", c.toString());
+	}
+
+	//Testing for simple subtraction with passed null timer
+	@Test (expected = IllegalArgumentException.class)
+	public void testSubTimerNullParameter() {
+		CountDownTimer c = new CountDownTimer(40, 26, 51);
+		CountDownTimer c2 = null;
+		c.sub(c2);
+	}
+
+	//Testing for no error when subtracting time equal to timers time (should be 0 after)
+	@Test
+	public void testSubTimerEqualsTimerTime() {
+		CountDownTimer c = new CountDownTimer(1, 50, 13);
+		CountDownTimer c2 = new CountDownTimer(1, 50, 13);
+		c.sub(c2);
+		assertEquals("0:00:00", c.toString());
+	}
+
+	//Testing for minute rollover on subtract
+	@Test
+	public void testSubTimerMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(12, 30, 5);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 30);
+		c.sub(c2);
+		assertEquals("12:29:35", c.toString());
+	}
+
+	//Testing for hour rollover on subtract
+	@Test
+	public void testSubTimerHourRollover() {
+		CountDownTimer c = new CountDownTimer(2, 50, 20);
+		CountDownTimer c2 = new CountDownTimer(0, 55, 0);
+		c.sub(c2);
+		assertEquals("1:55:20", c.toString());
+	}
+
+	//Testing for an illegal call when param timer is greater than time on timer
+	@Test (expected = IllegalArgumentException.class)
+	public void testSubTimerParameterTooLarge() {
+		CountDownTimer c = new CountDownTimer(1, 50, 13);
+		CountDownTimer c2 = new CountDownTimer(1, 50, 14);
+		c.sub(c2);
+	}
+
+	//Testing some random good numbers so that each one is tested
+	@Test
+	public void testSubSecondsRandomNumbers() {
+		CountDownTimer c = new CountDownTimer(4, 50, 30);
+		CountDownTimer c2 = new CountDownTimer(2, 45, 20);
+		c.sub(c2);
+		assertEquals("2:05:10", c.toString());
+	}
+
+
+
+	//			Inc Method Tests
+
+	//Testing for simple one second increment
+	@Test
+	public void testIncSimple() {
+		CountDownTimer c = new CountDownTimer(3, 43, 28);
+		c.inc();
+		assertEquals(29, c.getSeconds());
+		assertEquals("3:43:29", c.toString());
+	}
+
+	//Testing for minute rollover on increment
+	@Test
+	public void testAddMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(10, 23, 59);
+		c.inc();
+		assertEquals("10:24:00", c.toString());
+	}
+
+	//Testing for hour rollover on increment
+	@Test
+	public void testAddHourRollover() {
+		CountDownTimer c = new CountDownTimer(5, 59, 59);
+		c.inc();
+		assertEquals( "6:00:00", c.toString());
+	}
+
+
+
+	//			Add Seconds Parameter Method Tests
+
+	//Testing for simple one second addition
+	@Test
+	public void testAddSecondsOneSecond() {
+		CountDownTimer c = new CountDownTimer(56, 41, 51);
+		c.add(1);
+		assertEquals(52, c.getSeconds());
+		assertEquals("56:41:52", c.toString());
+	}
+
+	//Testing for simple addition with no rollover
+	@Test
+	public void testAddSeconds30Seconds() {
+		CountDownTimer c = new CountDownTimer(56, 41, 10);
+		c.add(30);
+		assertEquals(40, c.getSeconds());
+		assertEquals("56:41:40", c.toString());
+	}
+
+	//Testing for minute rollover on addition
+	@Test
+	public void testAddSecondsMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(1, 20, 50);
+		c.add(15);
+		assertEquals("1:21:05", c.toString());
+	}
+
+	//Testing for hour rollover on subtract
+	@Test
+	public void testAddSecondsHourRollover() {
+		CountDownTimer c = new CountDownTimer(5, 59, 50);
+		c.add(85);
+		assertEquals("6:01:15", c.toString());
+	}
+
+	//Testing for an illegal call when param is negative
+	@Test (expected = IllegalArgumentException.class)
+	public void testAddSecondsNegParam() {
+		CountDownTimer c = new CountDownTimer(0, 3, 10);
+		c.add(-3);
+	}
+
+
+
+	//			Add CountDownTimer Parameter Method Tests
+
+	//Testing for simple one second addition
+	@Test
+	public void testAddTimerOneSecond() {
+		CountDownTimer c = new CountDownTimer(40, 26, 51);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 1);
+		c.add(c2);
+		assertEquals(52, c.getSeconds());
+		assertEquals("40:26:52", c.toString());
+	}
+
+	//Testing for simple addition with no rollover
+	@Test
+	public void testAddTimer35Seconds() {
+		CountDownTimer c = new CountDownTimer(40, 26, 10);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 35);
+		c.add(c2);
+		assertEquals(45, c.getSeconds());
+		assertEquals("40:26:45", c.toString());
+	}
+
+	//Testing for addition with passed null timer
+	@Test (expected = IllegalArgumentException.class)
+	public void testAddTimerNullParameter() {
+		CountDownTimer c = new CountDownTimer(40, 26, 51);
+		CountDownTimer c2 = null;
+		c.add(c2);
+	}
+
+	//Testing for minute rollover on addition
+	@Test
+	public void testAddTimerMinuteRollover() {
+		CountDownTimer c = new CountDownTimer(12, 30, 40);
+		CountDownTimer c2 = new CountDownTimer(0, 0, 30);
+		c.add(c2);
+		assertEquals("12:31:10", c.toString());
+	}
+
+	//Testing for hour rollover on subtract
+	@Test
+	public void testAddTimerHourRollover() {
+		CountDownTimer c = new CountDownTimer(2, 50, 50);
+		CountDownTimer c2 = new CountDownTimer(0, 9, 10);
+		c.add(c2);
+		assertEquals("3:00:00", c.toString());
+	}
+
+	//Testing some random good numbers with no rollover so that each one is tested
+	@Test
+	public void testAddSecondsRandomNumbers() {
+		CountDownTimer c = new CountDownTimer(4, 20, 30);
+		CountDownTimer c2 = new CountDownTimer(2, 35, 20);
+		c.add(c2);
+		assertEquals("6:55:50", c.toString());
+	}
+
+
+
+	//			Save Method Tests
+
+	//Testing that save works good, have to use load to make sure it saved properly
+	@Test
+	public void testSaveGoodInput() {
+		CountDownTimer c = new CountDownTimer(321, 43, 23);
+		c.save("testTimer.txt");
+		CountDownTimer c2 = new CountDownTimer();
+		c2.load("testTimer.txt");
+		assertEquals("321:43:23", c2.toString());
+	}
+
+//	//TODO figure out what to do here
+//	//Testing
+//	@Test
+//	public void testSaveEmptyString() {
+//		CountDownTimer c = new CountDownTimer(321, 43, 23);
+//		c.save("");
+//	}
+
+
+
+	//			Load Method Tests
+
+	//Testing that load works good, have to use save to make sure it loads properly
+	@Test
+	public void testLoadGoodInput() {
 		CountDownTimer c = new CountDownTimer(9, 3, 23);
 		c.save("testTimer.txt");
 		CountDownTimer c2 = new CountDownTimer();
@@ -579,45 +839,180 @@ public class TestCountDownTimer {
 		assertEquals("9:03:23", c2.toString());
 	}
 
+//	//Testing
+//	@Test
+//	public void testLoadEmptyString() {
+//		CountDownTimer c = new CountDownTimer(321, 43, 23);
+//		c.save("");
+//	}
+
+//	//Testing
+//	@Test
+//	public void testLoadNotFound() {
+//		CountDownTimer c = new CountDownTimer(321, 43, 23);
+//		c.save("thisDoesntExist.txt");
+//	}
 
 
-//	@Test
-//	public void testDec1Second() {
-//		CountDownTimer s = new CountDownTimer(1, 59, 59);
-//
-//		// dec 1
-//		s.dec();
-//		assertEquals(s.getHours(), 1);
-//		assertEquals(s.getMinutes(), 59);
-//		assertEquals(s.getSeconds(), 58);
-//	}
-//
-//	@Test
-//	public void testEquals() {
-//		CountDownTimer s1 = new CountDownTimer(5, 59, 30);
-//		CountDownTimer s2 = new CountDownTimer(6, 01, 20);
-//		CountDownTimer s3 = new CountDownTimer(5, 59, 30);
-//		CountDownTimer s4 = new CountDownTimer(5, 59, 20);
-//		CountDownTimer s5 = new CountDownTimer(5, 40, 30);
-//		CountDownTimer s6 = new CountDownTimer(4, 59, 30);
-//		CountDownTimer s7 = new CountDownTimer(5, 40, 20);
-//		CountDownTimer s8 = new CountDownTimer(4, 59, 20);
-//		CountDownTimer s9 = new CountDownTimer(4, 40, 30);
-//
-//		assertFalse(s1.equals(s2));
-//		assertTrue(s1.equals(s3));
-//		assertEquals(s3, s1);
-//		assertFalse(s1.equals(s4));
-//		assertFalse(s1.equals(s5));
-//		assertFalse(s1.equals(s6));
-//		assertFalse(s1.equals(s7));
-//		assertFalse(s1.equals(s8));
-//		assertFalse(s1.equals(s9));
-//	}
-//
-//	@Test (expected = IllegalArgumentException.class)
-//	public void testEqualsNull() {
-//		CountDownTimer s = new CountDownTimer();
-//		s.equals(null);
-//	}
+
+	//			CopyOtherTimer Method Test
+
+	//Testing that the values are copied correctly
+	@Test
+	public void	testCopy() {
+		CountDownTimer c = new CountDownTimer(12, 12, 43);
+		CountDownTimer c2 = new CountDownTimer();
+		c2.copyOtherTimer(c);
+		assertEquals(c.toString(), c2.toString());
+	}
+
+
+
+	//			SetSuspend Method Tests
+
+	//TODO I need a test for every mutate method here
+
+
+
+	//			IsSuspended Method Tests
+
+	//Testing for before anything is changed, should be false and should not change when a CountDownTimer is created
+	@Test
+	public void testIsSuspendedDefault() {
+		assertTrue(!CountDownTimer.isSuspended());
+		CountDownTimer c = new CountDownTimer();
+		assertTrue(!CountDownTimer.isSuspended());
+	}
+
+	//Testing proper change of suspended, should be true
+	@Test
+	public void testIsSuspendedTrue() {
+		CountDownTimer c = new CountDownTimer();
+		CountDownTimer.setSuspend(true);
+		assertTrue(CountDownTimer.isSuspended());
+		//Reset to not mess up other tests
+		CountDownTimer.setSuspend(false);
+	}
+
+
+
+	//TODO I also need to add tests for these methos here
+	//			SetTimerZero Method Tests
+
+
+
+	//			TimeInSeconds Method Tests
+
+
+
+	//			IsValid Method Tests
+
+
+
+	//			GetHours Getter Test
+
+	//Simple getter test for hours, there really is only one test
+	@Test
+	public void testHoursGetter() {
+		CountDownTimer c = new CountDownTimer(3, 23, 34);
+		assertEquals(3, c.getHours());
+	}
+
+
+
+	//			GetMinutes Getter Test
+
+	//Simple getter test for minutes, there really is only one test
+	@Test
+	public void testMinutesGetter() {
+		CountDownTimer c = new CountDownTimer(3, 23, 34);
+		assertEquals(23, c.getMinutes());
+	}
+
+
+
+	//			GetSeconds Getter Test
+
+	//Simple getter test for seconds, there really is only one test
+	@Test
+	public void testSecondsGetter() {
+		CountDownTimer c = new CountDownTimer(3, 23, 34);
+		assertEquals(34, c.getSeconds());
+	}
+
+
+
+	//			SetHours Setter Tests
+
+	//Testing for good param properly being set
+	@Test
+	public void testSetHoursGoodParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setHours(54);
+		assertEquals(54, c.getHours());
+	}
+
+	//Testing for correct throw for negative param
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetHoursNegParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setHours(-35);
+	}
+
+
+
+	//			SetMinutes Setter Tests
+
+	//Testing for good param properly being set
+	@Test
+	public void testSetMinutesGoodParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setMinutes(10);
+		assertEquals(10, c.getMinutes());
+	}
+
+	//Testing for correct throw for param too big (>59)
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetMinutesBigParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setMinutes(60);
+	}
+
+	//Testing for correct throw for negative param
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetMinutesNegParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setMinutes(-35);
+	}
+
+
+
+	//			SetSeconds Setter Tests
+
+	//Testing for good param properly being set
+	@Test
+	public void testSetSecondsGoodParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setSeconds(10);
+		assertEquals(10, c.getSeconds());
+	}
+
+	//Testing for correct throw for param too big (>59)
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetSecondsBigParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setSeconds(65);
+	}
+
+	//Testing for correct throw for negative param
+	@Test (expected = IllegalArgumentException.class)
+	public void testSetSecondsNegParam() {
+		CountDownTimer c = new CountDownTimer(23, 53, 12);
+		c.setSeconds(-1);
+	}
+
+
+
+
+
 }

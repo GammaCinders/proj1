@@ -131,10 +131,15 @@ public class CountDownTimer {
             }
 
 
+            //Checking for numbers too large (can't be negative due to valid char check above)
             for(int i=0; i<split.length; i++) {
                 int num = Integer.parseInt(split[i]);
-                if(i != 2 && !isValid(num) || num < 0) {
-                    throw new IllegalArgumentException();
+
+                if(!isValid(num)) {
+                    //If num isn't hours and is invalid
+                    if(split.length != 3 || i > 0) {
+                        throw new IllegalArgumentException();
+                    }
                 }
             }
 
@@ -286,7 +291,7 @@ public class CountDownTimer {
      */
     public void sub(int seconds) {
         if(!suspended) {
-            if(seconds < 1) {
+            if(seconds < 1 || seconds > timeInSeconds()) {
                 throw new IllegalArgumentException();
             } else {
                 for(int i=0; i<seconds; i++) {
@@ -362,11 +367,11 @@ public class CountDownTimer {
         }
     }
 
-
-    //TODO update all here methods that I added later with javadocs
     /*************************************************************************************
-     *
-     * @param fileName
+     * Saves a file at the specified location (fileName) with the current time of this timer,
+     * can then call load() with the same fileName to retrieve the time
+     * @param fileName location of file to save info into, should be some path in the program that ends with a .txt
+     * @throws IllegalArgumentException If the fileName is invalid, check stack trace for exact exception
      */
     public void save(String fileName) {
         PrintWriter out = null;
@@ -374,7 +379,7 @@ public class CountDownTimer {
             out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
         } catch (Exception e) {
             e.printStackTrace();
-            //TODO throw something here that makes sense: throw new IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         out.println(toString());
@@ -382,9 +387,10 @@ public class CountDownTimer {
     }
 
     /*********************************************************************************
-     *
-     * @param fileName
+     * Loads a file at the specified location (fileName) and sets this timer to that time
+     * @param fileName Location of file to load info from, most likely should be some fileName that you already called save() with
      * @throws RuntimeException If a file could not be found or loaded properly at fileName
+     * @throws IllegalArgumentException If the data in the file is invalid the string constructor will throw
      */
     public void load(String fileName) {
         try {
@@ -394,12 +400,12 @@ public class CountDownTimer {
         //File could not be read/found
         } catch(Exception error){
             //That means a bad string was passed
-            throw new IllegalArgumentException();
+            throw new RuntimeException();
         }
 
     }
 
-    /************************************************************
+    /*************************************************************
      * Sets this timers time to that of the 'other' timer passed
      * @param other CountDownTimer with time to write onto this timer
      * @throws IllegalArgumentException If other is null
@@ -416,10 +422,18 @@ public class CountDownTimer {
         }
     }
 
+    /********************************************************************
+     * Sets the suspend variable to the param. If true, no mutation methods will work (Constructors do still work)
+     * @param suspend
+     */
     public static void setSuspend(boolean suspend) {
         CountDownTimer.suspended = suspend;
     }
 
+    /***************************************************
+     * Returns the value of the 'suspended' var. See setSuspend() for more info on what it does
+     * @return Value of 'suspended'
+     */
     public static boolean isSuspended() {
         return CountDownTimer.suspended;
     }
