@@ -183,6 +183,12 @@ public class TestCountDownTimer {
 		assertEquals(0, c.getHours());
 	}
 
+	//Testing String param with a bunch of spaces
+	@Test (expected = IllegalArgumentException.class)
+	public void testConstructorStringParameterJustSpaces() {
+		CountDownTimer c = new CountDownTimer("      ");
+	}
+
 	//Testing String param with a proper string with hours (3 parts)
 	@Test
 	public void testConstructorStringParameter3GoodFormat() {
@@ -527,7 +533,7 @@ public class TestCountDownTimer {
 	}
 
 	//Testing for an illegal call when the timer is at 0
-	@Test (expected = IllegalStateException.class)
+	@Test (expected = IllegalArgumentException.class)
 	public void testDecAlreadyAtZero() {
 		CountDownTimer c = new CountDownTimer();
 		c.dec();
@@ -817,13 +823,12 @@ public class TestCountDownTimer {
 		assertEquals("321:43:23", c2.toString());
 	}
 
-//	//TODO figure out what to do here
-//	//Testing
-//	@Test
-//	public void testSaveEmptyString() {
-//		CountDownTimer c = new CountDownTimer(321, 43, 23);
-//		c.save("");
-//	}
+	//Testing for correct error when passed string is empty
+	@Test (expected = IllegalArgumentException.class)
+	public void testSaveEmptyString() {
+		CountDownTimer c = new CountDownTimer(321, 43, 23);
+		c.save("");
+	}
 
 
 
@@ -839,19 +844,19 @@ public class TestCountDownTimer {
 		assertEquals("9:03:23", c2.toString());
 	}
 
-//	//Testing
-//	@Test
-//	public void testLoadEmptyString() {
-//		CountDownTimer c = new CountDownTimer(321, 43, 23);
-//		c.save("");
-//	}
+	//Testing for proper error when an empty string is passed
+	@Test (expected = IllegalArgumentException.class)
+	public void testLoadEmptyString() {
+		CountDownTimer c = new CountDownTimer(321, 43, 23);
+		c.load("");
+	}
 
-//	//Testing
-//	@Test
-//	public void testLoadNotFound() {
-//		CountDownTimer c = new CountDownTimer(321, 43, 23);
-//		c.save("thisDoesntExist.txt");
-//	}
+	//Testing for proper error when a file is not found
+	@Test (expected = IllegalArgumentException.class)
+	public void testLoadNotFound() {
+		CountDownTimer c = new CountDownTimer(321, 43, 23);
+		c.load("thisDoesntExist.txt");
+	}
 
 
 
@@ -866,11 +871,142 @@ public class TestCountDownTimer {
 		assertEquals(c.toString(), c2.toString());
 	}
 
+	//Testing for correct error from null
+	@Test (expected = IllegalArgumentException.class)
+	public void	testCopyParameterNull() {
+		CountDownTimer c = new CountDownTimer(12, 12, 43);
+		CountDownTimer c2 = null;
+		c.copyOtherTimer(c2);
+	}
 
 
 	//			SetSuspend Method Tests
 
-	//TODO I need a test for every mutate method here
+	//Testing for stopping decrement
+	@Test
+	public void testSetSuspendDec() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer.setSuspend(true);
+		c.dec();
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping sub(int);
+	@Test
+	public void testSetSuspendSubIntParameter() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer.setSuspend(true);
+		c.sub(30);
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping sub(CountDownTimer);
+	@Test
+	public void testSetSuspendSubCountDownTimerParameter() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer c2 = new CountDownTimer(10);
+		CountDownTimer.setSuspend(true);
+		c.sub(c2);
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping increment
+	@Test
+	public void testSetSuspendInc() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer.setSuspend(true);
+		c.inc();
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping add(int);
+	@Test
+	public void testSetSuspendAddIntParameter() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer.setSuspend(true);
+		c.add(30);
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping add(CountDownTimer);
+	@Test
+	public void testSetSuspendAddCountDownTimerParameter() {
+		CountDownTimer c = new CountDownTimer(20);
+		CountDownTimer c2 = new CountDownTimer(10);
+		CountDownTimer.setSuspend(true);
+		c.add(c2);
+		assertEquals(20, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping load();
+	@Test
+	public void testSetSuspendLoad() {
+		CountDownTimer c = new CountDownTimer(30);
+		c.save("testTimer.txt");
+		assertEquals(30, c.getSeconds());
+		c.setSeconds(10);
+		CountDownTimer.setSuspend(true);
+		c.load("testTimer.txt");
+		assertEquals(10, c.getSeconds());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping copyOtherTimer();
+	@Test
+	public void testSetSuspendCopyOtherTimer() {
+		CountDownTimer c = new CountDownTimer(28, 49, 30);
+		CountDownTimer c2 = new CountDownTimer(10, 10, 10);
+		CountDownTimer.setSuspend(true);
+		c.copyOtherTimer(c2);
+		assertEquals("28:49:30", c.toString());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping SetTimeZero
+	@Test
+	public void testSetSuspendSetTimeZero() {
+		CountDownTimer c = new CountDownTimer(28, 49, 30);
+		CountDownTimer.setSuspend(true);
+		c.setTimeZero();
+		assertEquals("28:49:30", c.toString());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping setHours
+	@Test
+	public void testSetSuspendSetHours() {
+		CountDownTimer c = new CountDownTimer(28, 49, 30);
+		CountDownTimer.setSuspend(true);
+		c.setHours(9);
+		assertEquals("28:49:30", c.toString());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping setMinutes
+	@Test
+	public void testSetSuspendSetMinutes() {
+		CountDownTimer c = new CountDownTimer(28, 49, 30);
+		CountDownTimer.setSuspend(true);
+		c.setMinutes(9);
+		assertEquals("28:49:30", c.toString());
+		CountDownTimer.setSuspend(false);
+	}
+
+	//Testing for stopping setSeconds
+	@Test
+	public void testSetSuspendSetSeconds() {
+		CountDownTimer c = new CountDownTimer(28, 49, 30);
+		CountDownTimer.setSuspend(true);
+		c.setSeconds(9);
+		assertEquals("28:49:30", c.toString());
+		CountDownTimer.setSuspend(false);
+	}
 
 
 
@@ -896,16 +1032,50 @@ public class TestCountDownTimer {
 
 
 
-	//TODO I also need to add tests for these methos here
-	//			SetTimerZero Method Tests
+	//			SetTimeZero Method Test
+
+	//Testing for proper reset of values to 0
+	@Test
+	public void testSetTimeZero() {
+		CountDownTimer c = new CountDownTimer(12 , 45, 21);
+		c.setTimeZero();
+		assertEquals(0, c.getHours());
+		assertEquals(0, c.getMinutes());
+		assertEquals(0, c.getSeconds());
+	}
 
 
 
-	//			TimeInSeconds Method Tests
+	//			TimeInSeconds Method Test
+
+	//Testing for correct time in seconds from method
+	@Test
+	public void testTimeInSeconds() {
+		CountDownTimer c = new CountDownTimer(2, 2, 10);
+		assertEquals(7330, c.timeInSeconds());
+	}
 
 
 
 	//			IsValid Method Tests
+
+	//Testing for good value in range
+	@Test
+	public void testIsValidParameterGood() {
+		assertEquals(true, CountDownTimer.isValid(35));
+	}
+
+	//Testing for error from negative value
+	@Test
+	public void testIsValidParameterNeg() {
+		assertEquals(false, CountDownTimer.isValid(-20));
+	}
+
+	//Testing for error from num too big
+	@Test
+	public void testIsValidParameterBig() {
+		assertEquals(false, CountDownTimer.isValid(60));
+	}
 
 
 

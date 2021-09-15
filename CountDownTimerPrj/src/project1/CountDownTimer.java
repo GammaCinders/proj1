@@ -1,8 +1,6 @@
 package project1;
 
-import sun.rmi.transport.proxy.RMISocketInfo;
 import java.util.Scanner;
-import java.io.File;
 import java.io.*;
 
 /******************************************************************************************8
@@ -31,7 +29,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If hours, minutes or seconds are negative; also if minutes or seconds are greater than 59
      */
     public CountDownTimer(int hours, int minutes, int seconds) {
-        if(hours < 0 || !isValid(minutes) || !isValid(seconds)) {
+        if(hours < 0 || !CountDownTimer.isValid(minutes) || !CountDownTimer.isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = hours;
@@ -46,7 +44,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If minutes or seconds is greater than 59 or negative
      */
     public CountDownTimer(int minutes, int seconds) {
-        if(!isValid(minutes) || !isValid(seconds)) {
+        if(!CountDownTimer.isValid(minutes) || !CountDownTimer.isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = 0;
@@ -60,7 +58,7 @@ public class CountDownTimer {
      * @throws IllegalArgumentException If seconds is negative or greater than 59
      */
     public CountDownTimer(int seconds) {
-        if(!isValid(seconds)) {
+        if(!CountDownTimer.isValid(seconds)) {
             throw new IllegalArgumentException();
         }
         this.hours = 0;
@@ -135,7 +133,7 @@ public class CountDownTimer {
             for(int i=0; i<split.length; i++) {
                 int num = Integer.parseInt(split[i]);
 
-                if(!isValid(num)) {
+                if(!CountDownTimer.isValid(num)) {
                     //If num isn't hours and is invalid
                     if(split.length != 3 || i > 0) {
                         throw new IllegalArgumentException();
@@ -262,12 +260,12 @@ public class CountDownTimer {
 
     /*************************************************
      * Subtracts one second from the current time
-     * @throws IllegalStateException If this timer is already at 0:00:00
+     * @throws IllegalArgumentException If this timer is already at 0:00:00
      */
     public void dec() {
         if(!suspended) {
             if(this.timeInSeconds() < 1) {
-                throw new IllegalStateException();
+                throw new IllegalArgumentException();
             } else {
                 seconds--;
 
@@ -378,7 +376,7 @@ public class CountDownTimer {
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new IllegalArgumentException();
         }
 
@@ -389,20 +387,22 @@ public class CountDownTimer {
     /*********************************************************************************
      * Loads a file at the specified location (fileName) and sets this timer to that time
      * @param fileName Location of file to load info from, most likely should be some fileName that you already called save() with
-     * @throws RuntimeException If a file could not be found or loaded properly at fileName
      * @throws IllegalArgumentException If the data in the file is invalid the string constructor will throw
+     *                                  Also if file can't be found or loaded
      */
     public void load(String fileName) {
-        try {
-            Scanner fileReader = new Scanner(new File(fileName));
-            CountDownTimer temp = new CountDownTimer(fileReader.next());
-            copyOtherTimer(temp);
-        //File could not be read/found
-        } catch(Exception error){
-            //That means a bad string was passed
-            throw new RuntimeException();
+        if(!suspended) {
+            try {
+                Scanner fileReader = new Scanner(new File(fileName));
+                CountDownTimer temp = new CountDownTimer(fileReader.next());
+                copyOtherTimer(temp);
+                //File could not be read/found
+            } catch(Exception e){
+                //e.printStackTrace();
+                //That means a bad string was passed
+                throw new IllegalArgumentException();
+            }
         }
-
     }
 
     /*************************************************************
@@ -423,15 +423,18 @@ public class CountDownTimer {
     }
 
     /********************************************************************
-     * Sets the suspend variable to the param. If true, no mutation methods will work (Constructors do still work)
-     * @param suspend
+     * Sets the suspended variable to the param.
+     * If true, no mutation methods will work.
+     * (Constructors do still work, as well as save())
+     * @param suspend value to set 'suspended' to (see desc for more info)
      */
     public static void setSuspend(boolean suspend) {
         CountDownTimer.suspended = suspend;
     }
 
     /***************************************************
-     * Returns the value of the 'suspended' var. See setSuspend() for more info on what it does
+     * Returns the value of the 'suspended' var. See setSuspend(),
+     * for more info on what 'suspended' does
      * @return Value of 'suspended'
      */
     public static boolean isSuspended() {
@@ -439,9 +442,9 @@ public class CountDownTimer {
     }
 
     /***************************************************
-     * Just sets time to 00:00:00
+     * Just sets time to 00:00:00 (Sets minutes, seconds and hours to 0)
      */
-    private void setTimeZero(){
+    public void setTimeZero(){
         if(!suspended) {
             setHours(0);
             setMinutes(0);
@@ -463,7 +466,7 @@ public class CountDownTimer {
      * @param minsOrSecs number of minutes or seconds to check if valid
      * @return boolean false if param is negative or greater than 59
      */
-    private boolean isValid(int minsOrSecs) {
+    public static boolean isValid(int minsOrSecs) {
         if(minsOrSecs < 0 || minsOrSecs > 59) {
             return false;
         } else {
@@ -516,7 +519,7 @@ public class CountDownTimer {
      */
     public void setMinutes(int minutes) {
         if(!suspended) {
-            if(!isValid(minutes)) {
+            if(!CountDownTimer.isValid(minutes)) {
                 throw new IllegalArgumentException();
             }
             this.minutes = minutes;
@@ -530,7 +533,7 @@ public class CountDownTimer {
      */
     public void setSeconds(int seconds) {
         if(!suspended) {
-            if(!isValid(seconds)) {
+            if(!CountDownTimer.isValid(seconds)) {
                 throw new IllegalArgumentException();
             }
             this.seconds = seconds;
