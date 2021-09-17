@@ -4,14 +4,23 @@ import java.util.Scanner;
 import java.io.*;
 
 /******************************************************************************************8
- *
+ * Stores and manipulates an amount of time as controlled by the user.
+ * Can also be saved and loaded from files for a more permanent solution.
+ * Can Initialize to any valid amount of seconds, minutes, and hours,
+ * and can then update with useful methods such as inc/dec/add/sub.
  */
 public class CountDownTimer {
 
+    /** Number of hours (3600 seconds) that this CountDownTimer Has. Cannot be negotive */
     private int hours;
+
+    /** Number of minutes (60 seconds) that this CountDownTimer Has. Cannot be negative or > 59 */
     private int minutes;
+
+    /** Number of seconds that this CountDownTimer Has. Cannot be negative or > 59 */
     private int seconds;
 
+    /** Determines whether mutation methods will work (mutation work when suspended = false) */
     private static boolean suspended = false;
 
     /************************************
