@@ -289,12 +289,14 @@ public class CountDownTimer {
                 }
             }
         }
+    sub(11);
     }
 
     /************************************************************************************
      * Subtracts an amount of seconds from the current time on this object
      * @param seconds Number of seconds to subtract from the current time
-     * @throws IllegalArgumentException If seconds is negative or 0
+     * @throws IllegalArgumentException If seconds is negative or 0, or greater than
+     *                                  the total seconds on this CountDownTimer
      */
     public void sub(int seconds) {
         if(!suspended) {
