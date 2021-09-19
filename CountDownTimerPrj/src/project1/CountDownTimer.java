@@ -89,7 +89,6 @@ public class CountDownTimer {
         this.seconds = other.getSeconds();
     }
 
-
     /************************************************************************************************
      * Initializes this object with time equal to the properly formatted string param
      * @param startTime Properly formatted string to be parsed for time
