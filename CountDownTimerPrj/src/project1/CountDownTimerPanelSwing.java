@@ -197,7 +197,7 @@ public class CountDownTimerPanelSwing extends JPanel {
                         }
                     }
                 } catch (NumberFormatException io) {
-                    JOptionPane.showMessageDialog(null, "Enter an integer in all fields");
+                    JOptionPane.showMessageDialog(null, "Only enter valid integers in fields");
                 } catch (IllegalArgumentException e) {
                     JOptionPane.showMessageDialog(null, "Error in field");
                 }
@@ -243,20 +243,25 @@ public class CountDownTimerPanelSwing extends JPanel {
                 try {
                     watch.add(Integer.parseInt(addSecondsField.getText()));
                 } catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(null, "Illegal seconds in Add field");
+                    JOptionPane.showMessageDialog(null, "Illegal or no seconds in Add field");
                 }
             }
 
             if (event.getSource() == stringInputButton) {
-                watch = new CountDownTimer(newStringField.getText());
-                javaTimer.start();
+                if(!CountDownTimer.isSuspended()) {
+                    try {
+                        watch = new CountDownTimer(newStringField.getText());
+                    } catch(IllegalArgumentException e) {
+                        JOptionPane.showMessageDialog(null, "Improper String Format");
+                    }
+                }
             }
 
             if(event.getSource() == subButton) {
                 try {
                     watch.sub(Integer.parseInt(subSecondsField.getText()));
                 } catch(Exception e) {
-                    JOptionPane.showMessageDialog(null, "Illegal seconds in Subtract field");
+                    JOptionPane.showMessageDialog(null, "Illegal or no seconds in Subtract field");
                 }
             }
 
@@ -265,7 +270,11 @@ public class CountDownTimerPanelSwing extends JPanel {
             }
 
             if(event.getSource() == decButton) {
-                watch.dec();
+                try {
+                    watch.dec();
+                } catch(IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(null, "Can not decrease further");
+                }
             }
 
             if(event.getSource() == compareToButton) {
