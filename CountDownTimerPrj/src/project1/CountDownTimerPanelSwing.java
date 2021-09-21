@@ -1,5 +1,7 @@
 package project1;
 
+import jdk.nashorn.internal.scripts.JO;
+
 import javax.swing.*;
 import java.util.Scanner;
 import java.awt.*;
@@ -119,29 +121,29 @@ public class CountDownTimerPanelSwing extends JPanel {
         decButton.addActionListener(new ButtonListener());
 
 
-        //Compare to and equal to checks buttons
-        equalToButton = new JButton("Equal to");
-        add(equalToButton);
-        compareToButton = new JButton("Compare to");
-        add(compareToButton);
-
-        add(newBlankGrayPanel());
-        add(newBlankGrayPanel());
-
-        //add Listener
-        equalToButton.addActionListener(new ButtonListener());
-        compareToButton.addActionListener(new ButtonListener());
-
-
         //Load buttons/fields
         loadButton = new JButton("Load");
         add(loadButton);
         saveButton = new JButton("Save");
         add(saveButton);
 
+        add(newBlankGrayPanel());
+        add(newBlankGrayPanel());
+
         //add Listeners
         saveButton.addActionListener(new ButtonListener());
         loadButton.addActionListener(new ButtonListener());
+
+
+        //Compare to and equal to checks buttons
+        equalToButton = new JButton("Equal to");
+        add(equalToButton);
+        compareToButton = new JButton("Compare to");
+        add(compareToButton);
+
+        //add Listener
+        equalToButton.addActionListener(new ButtonListener());
+        compareToButton.addActionListener(new ButtonListener());
 
 
         //Add bottom text for showing time
@@ -220,7 +222,12 @@ public class CountDownTimerPanelSwing extends JPanel {
                     textArea.setText("No file saved");
                 }
                 else {
-                    watch.save(chooser.getSelectedFile().getPath());
+                    try {
+                        watch.save(chooser.getSelectedFile().getPath());
+                    } catch(Exception e) {
+                        JOptionPane.showMessageDialog(null, "File could not be saved");
+                    }
+
                 }
             }
 
@@ -232,8 +239,12 @@ public class CountDownTimerPanelSwing extends JPanel {
                     if (status != JFileChooser.APPROVE_OPTION) {
                         JOptionPane.showMessageDialog(null, "No file chosen");
                     } else {
-                        File file = chooser.getSelectedFile();
-                        watch.load(file.getPath());
+                        try {
+                            File file = chooser.getSelectedFile();
+                            watch.load(file.getPath());
+                        } catch(Exception e) {
+                            JOptionPane.showMessageDialog(null, "File could not be loaded");
+                        }
                     }
                 }
             }
@@ -301,8 +312,10 @@ public class CountDownTimerPanelSwing extends JPanel {
                                 JOptionPane.showMessageDialog(null, "This CountDownTimer has more time");
                                 break;
                         }
+                    } catch (IllegalArgumentException e) {
+                        JOptionPane.showMessageDialog(null, "File loaded was not a properly formatted timer save file");
                     } catch (Exception e) {
-
+                        JOptionPane.showMessageDialog(null, "Could not load file");
                     }
                 }
             }
@@ -325,8 +338,10 @@ public class CountDownTimerPanelSwing extends JPanel {
                         } else {
                             JOptionPane.showMessageDialog(null, "The two CountDownTimers are not equal (different time)");
                         }
-                    } catch (Exception e){
-
+                    } catch (IllegalArgumentException e) {
+                        JOptionPane.showMessageDialog(null, "File loaded was not a properly formatted timer save file");
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Could not load file");
                     }
 
                 }
