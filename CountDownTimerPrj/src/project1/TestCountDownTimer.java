@@ -2,17 +2,16 @@ package project1;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.NoSuchFileException;
-import java.util.IllformedLocaleException;
-
-import org.junit.Assert;
 import org.junit.Test;
 
+/**********************************************************************
+ * Tests all methods in CountDownTimer thoroughly and professionally
+ * to ensure full coverage and flawless code
+ * (Well, flawless yet unoptimized code that is)
+ *
+ * @author Eric Hargrove and Keagen Talsma
+ * @version 9/21/2021
+ *********************************************************************/
 public class TestCountDownTimer {
 
 	//			0 Parameter Constructor Test
@@ -276,43 +275,49 @@ public class TestCountDownTimer {
 		new CountDownTimer("0");
 	}
 
-	//Testing String param with hours and bad hours character types. THIS is the same as testing for negatives
+	//Testing String param with hours and bad hours character types.
+    //This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter3BadHoursCharType() {
 		new CountDownTimer("-1:02:00");
 	}
 
-	//Testing String param with hours and bad minutes character types. THIS is the same as testing for negatives
+	//Testing String param with hours and bad minutes character types
+    //This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter3BadMinutesCharType() {
 		new CountDownTimer("2:;2:00");
 	}
 
-	//Testing String param with hours and bad seconds character types. THIS is the same as testing for negatives
+	//Testing String param with hours and bad seconds character types.
+    //This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter3BadSecondsCharType() {
 		new CountDownTimer("4:32:.0");
 	}
 
-	//Testing String param with minutes and bad minutes character types. THIS is the same as testing for negatives
+	//Testing String param with minutes and bad minutes character types.
+    // This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter2BadMinutesCharType() {
 		new CountDownTimer("4+:00");
 	}
 
-	//Testing String param with minutes and bad seconds character types. THIS is the same as testing for negatives
+	//Testing String param with minutes and bad seconds character types.
+    //This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter2BadSecondsCharType() {
 		new CountDownTimer("32:4-");
 	}
 
-	//Testing String param with seconds and bad seconds character types. THIS is the same as testing for negatives
+	//Testing String param with seconds and bad seconds character types.
+    //This is the same as testing for negatives
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter1BadSecondsCharType() {
 		new CountDownTimer("/0");
 	}
 
-	//Testing String param with hours and bad minutes digits and char type
+	//Testing String param with hours and bad minutes digits and char type.
 	@Test (expected = IllegalArgumentException.class)
 	public void testConstructorStringParameter3BadMinsCharAndDigits() {
 		new CountDownTimer("9:=:03");
@@ -393,14 +398,14 @@ public class TestCountDownTimer {
 
 	//			toString Method Tests
 
-	//Testing for correct return string with all 2 digits (less formatting)
+	//Testing for correct return string with all 2 digits
 	@Test
 	public void testToString2DigitValues() {
 		CountDownTimer c = new CountDownTimer(49, 34, 26);
 		assertEquals("49:34:26", c.toString());
 	}
 
-	//Testing for correct return string with 1 digit values (should become 2 in output)
+	//Testing for correct return string with 1 digit values
 	@Test
 	public void testToString1DigitValues() {
 		CountDownTimer c = new CountDownTimer(4, 3, 9);
@@ -561,7 +566,7 @@ public class TestCountDownTimer {
 		assertEquals("56:41:20", c.toString());
 	}
 
-	//Testing for no error when subtracting time equal to timers time (should be 0 after)
+	//Testing for no error when subtracting time equal to timers time
 	@Test
 	public void testSubSecondsTimeEqualsTimerTime() {
 		CountDownTimer c = new CountDownTimer(1, 20, 20);
@@ -586,7 +591,7 @@ public class TestCountDownTimer {
 		assertEquals("4:59:55", c.toString());
 	}
 
-	//Testing for an illegal call when param to subtract is greater than time on timer
+	//Testing when sub param is greater than CountDownTimer time
 	@Test (expected = IllegalArgumentException.class)
 	public void testSubSecondsParameterTooLarge() {
 		CountDownTimer c = new CountDownTimer(0, 3, 10);
@@ -632,7 +637,7 @@ public class TestCountDownTimer {
 		c.sub(c2);
 	}
 
-	//Testing for no error when subtracting time equal to timers time (should be 0 after)
+	//Testing for no error when subtracting time equal to timers time
 	@Test
 	public void testSubTimerEqualsTimerTime() {
 		CountDownTimer c = new CountDownTimer(1, 50, 13);
@@ -659,7 +664,7 @@ public class TestCountDownTimer {
 		assertEquals("1:55:20", c.toString());
 	}
 
-	//Testing for an illegal call when param timer is greater than time on timer
+	//Testing for when param timer is greater than time on timer
 	@Test (expected = IllegalArgumentException.class)
 	public void testSubTimerParameterTooLarge() {
 		CountDownTimer c = new CountDownTimer(1, 50, 13);
@@ -800,7 +805,7 @@ public class TestCountDownTimer {
 		assertEquals("3:00:00", c.toString());
 	}
 
-	//Testing some random good numbers with no rollover so that each one is tested
+	//Testing some random simple numbers (no rollover)
 	@Test
 	public void testAddSecondsRandomNumbers() {
 		CountDownTimer c = new CountDownTimer(4, 20, 30);
@@ -813,7 +818,7 @@ public class TestCountDownTimer {
 
 	//			Save Method Tests
 
-	//Testing that save works good, have to use load to make sure it saved properly
+	//Testing that save() saves correctly
 	@Test
 	public void testSaveGoodInput() {
 		CountDownTimer c = new CountDownTimer(321, 43, 23);
@@ -834,7 +839,7 @@ public class TestCountDownTimer {
 
 	//			Load Method Tests
 
-	//Testing that load works good, have to use save to make sure it loads properly
+	//Testing that load() loads proper info properly
 	@Test
 	public void testLoadGoodInput() {
 		CountDownTimer c = new CountDownTimer(9, 3, 23);
@@ -1012,7 +1017,8 @@ public class TestCountDownTimer {
 
 	//			IsSuspended Method Tests
 
-	//Testing for before anything is changed, should be false and should not change when a CountDownTimer is created
+	//Testing for before anything is changed
+	//Testing that a new Timer should not change suspended
 	@Test
 	public void testIsSuspendedDefault() {
 		assertTrue(!CountDownTimer.isSuspended());

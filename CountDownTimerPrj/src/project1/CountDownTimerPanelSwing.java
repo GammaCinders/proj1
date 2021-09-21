@@ -1,24 +1,23 @@
 package project1;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.Locale;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-/**
- * This is the portion of the GUI that includes the boxes where you type your hours, minutes, and seconds.
- * Also included are buttons to start/stop/continue the timer, as well as a way to add seconds,
+/**********************************************************************
+ * This is the main portion of the GUI that includes the boxes where
+ * you type your hours, minutes, and seconds. Also included are buttons
+ * to start/stop/continue the timer, as well as a way to add seconds,
  * load/save your timer, etc.
+ * PanelMainSwing and GUISwing are mainly to just instantiate this class
+ * as needed in a good layout.
  *
  * @author Eric Hargrove and Keagen Talsma
  * @version 9/14/2021
- */
+ *********************************************************************/
 public class CountDownTimerPanelSwing extends JPanel {
 
     private CountDownTimer watch;
@@ -252,7 +251,7 @@ public class CountDownTimerPanelSwing extends JPanel {
                     try {
                         watch = new CountDownTimer(newStringField.getText());
                     } catch(IllegalArgumentException e) {
-                        JOptionPane.showMessageDialog(null, "Improper String Format");
+                        JOptionPane.showMessageDialog(null, "Improper String Format or value");
                     }
                 }
             }
